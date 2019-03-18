@@ -1,0 +1,76 @@
+<!--
+Ramy Huffman
+Final Project
+itunes.html
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>iTunes Artist Search by Ramy Huffman</title>
+    <link href="itunes.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>	
+
+<script>
+"use strict";			
+$(document).ready(function(){
+	
+$("#searchTerm").focus();
+
+$("#search").click(function() {
+	var searchTerm = $("#searchTerm").val();
+	if (searchTerm === "") {
+		alert("Please enter an artist name");
+		$("#searchTerm").focus();
+		}
+	else {
+		$("#results").empty();
+		$.getJSON( "http://itunes.apple.com/search?term=" + searchTerm + '&limit=20' + '&entity=musicTrack' + '&media=music' + '&country=US' + '&callback=?', function(data) {
+		$.each(data.results, function() {
+      $('<li></li>')
+		.hide()
+			.append('<h4><a href="http://itunes.apple.com/search?term=' 
+          		+ this.artistName + '">'
+			+ '</a> ' + '<img src="' + this.artworkUrl100 + '" align="right" />'	
+          		+ '</a> ' + 'Track: ' + this.trackCensoredName + " Preview".link(this.previewUrl)
+          		+ '</a> ' + '<br />Track Price: ' + this.trackPrice + " " + this.currency
+          		+ '</a> ' + '<br />Artist: '  + this.artistName.link(this.artistViewUrl)
+          		+ '</a> ' + '<br />Collection: '  + this.collectionName.link(this.collectionViewUrl) 
+        		+ '</a> ' + '<br />Collection Price: '  + this.collectionPrice + " " + this.currency 				
+          		+ '</a> ' + '<br />Primary Genre: '  + this.primaryGenreName
+			+ '</h4>')
+        		.appendTo('#results')
+        		.fadeIn();
+    		});        
+			$("#results").listview("refresh");
+	  		}); // end getJSON
+		} // end else statement
+	}); // end click function
+}); // end ready 
+</script>
+
+
+</head>
+
+<body>
+    <header></header>
+
+<main>
+    <img src = "img/ITunes_Logo_50x50.png" alt="iTunes Logo">
+    <div>
+	<h3>iTunes Artist Search</h3>
+        <input type="text" name="searchTerm" id="searchTerm">
+        <input type="button" id="search" value="Search">
+    </div>
+</main>
+    
+<nav>
+	<ul data-role="listview" id="results">
+	</ul>
+</nav>
+    
+    
+    <footer></footer>
+</body>
